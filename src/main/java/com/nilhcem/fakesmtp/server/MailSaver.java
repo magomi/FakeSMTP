@@ -1,5 +1,6 @@
 package com.nilhcem.fakesmtp.server;
 
+import com.nilhcem.fakesmtp.check.MailCache;
 import com.nilhcem.fakesmtp.core.ArgsHandler;
 import com.nilhcem.fakesmtp.core.Configuration;
 import com.nilhcem.fakesmtp.core.I18n;
@@ -81,7 +82,17 @@ public final class MailSaver extends Observable {
 
 			setChanged();
 			notifyObservers(model);
+
+			cacheMailData(model);
 		}
+	}
+
+	private void cacheMailData(EmailModel model) {
+		MailCache.getInstance().putMailData(extractBookingNumber(model), model.getEmailStr());
+	}
+
+	private String extractBookingNumber(EmailModel model) {
+		return model.getSubject().substring(model.getSubject().lastIndexOf(" ") + 1);
 	}
 
 	/**
